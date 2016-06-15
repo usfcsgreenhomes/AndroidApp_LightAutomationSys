@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFE8F0DD"
+    android:fillViewport="true">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.usfca.greenhomes.Signup"
+        android:background="#FFE8F0DD">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/userID"
+            android:layout_marginTop="42dp"
+            android:hint="User ID [8 -100 characters]"
+            android:textAlignment="center"
+            android:typeface="serif"
+            android:layout_alignRight="@+id/name"
+            android:layout_alignEnd="@+id/name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/phone"
+            android:typeface="serif"
+            android:hint="Phone Number [10 digits]"
+            android:layout_marginTop="25dp"
+            android:textAlignment="center"
+            android:layout_below="@+id/email"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/pass1"
+            android:layout_below="@id/phone"
+            android:textAlignment="center"
+            android:typeface="serif"
+            android:layout_marginTop="25dp"
+            android:hint="Password [6-100 characters]" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/name"
+            android:layout_below="@id/userID"
+            android:layout_marginTop="25dp"
+            android:typeface="serif"
+            android:hint="Nickname [6 - 10 characters]"
+            android:textAlignment="center" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/email"
+            android:layout_below="@id/name"
+            android:layout_marginTop="25dp"
+            android:typeface="serif"
+            android:textAlignment="center"
+            android:hint="Email ID [8 - 100 characters]" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/pass2"
+            android:textAlignment="center"
+            android:typeface="serif"
+            android:hint="Re-type password"
+            android:layout_below="@id/pass1"
+            android:layout_marginTop="25dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:id="@+id/register"
+            android:background="#5a785a"
+            android:textColor="#ffffff"
+            android:backgroundTintMode="multiply"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:textStyle="bold"
+            android:clickable="false"
+            android:onClick="onButtonClickListener"
+            android:typeface="serif"
+            android:layout_below="@+id/pass2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="67dp" />
+
+    </RelativeLayout>
+</ScrollView>

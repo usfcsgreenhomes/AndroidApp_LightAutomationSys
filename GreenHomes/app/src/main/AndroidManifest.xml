@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.usfca.greenhomes">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission android:name="com.usfca.greenhomes.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.usfca.greenhomes.permission.C2D_MESSAGE" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Login"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.Login" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Signup"
+            android:label="@string/title_activity_signup"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.Signup" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SuccessfullyRegistered"
+            android:label="@string/title_activity_success"
+            android:parentActivityName=".Signup">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.SuccessfullyRegistered" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AboutUs"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.AboutUs" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ContactUs"
+            android:label="@string/title_activity_contact"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.ContactUs" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ThankYou"
+            android:label="@string/title_activity_thanks"
+            android:parentActivityName=".ContactUs">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.ThankYou" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".UserProfile"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.UserProfile" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ForgotPasssword"
+            android:label="@string/title_activity_password"
+            android:parentActivityName=".Login">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.ForgotPasssword" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".PasswordSent"
+            android:label="@string/title_activity_passwordsent"
+            android:parentActivityName=".ForgotPasssword">
+            <intent-filter>
+                <action android:name="com.usfca.greenhomes.PasswordSent" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- for Gingerbread GSF backward compat -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="com.usfca.greenhomes" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="com.usfca.greenhomes.MyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".MyServices"
+            android:exported="false">
+        </service>
+
+    </application>
+
+</manifest>

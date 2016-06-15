@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_activity_login">Login</string>
+    <string name="app_name">greenhomes</string>
+    <string name="title_activity_signup">Sign Up</string>
+    <string name="title_activity_success">Congrats</string>
+    <string name="title_activity_about">About Us</string>
+    <string name="title_activity_contact">Contact Us</string>
+    <string name="title_activity_thanks">Thanks</string>
+    <string name="title_activity_profile">Welcome</string>
+    <string name="title_activity_password">Forgot Password</string>
+    <string name="title_activity_passwordsent">Password Sent</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

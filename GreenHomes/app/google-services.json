@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "918094878188",
+    "project_id": "greenhomes-1341"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:918094878188:android:df2360d49d8908cf",
+        "android_client_info": {
+          "package_name": "com.usfca.greenhomes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqMq1nNx4caPj6Aiaw4bVQsJlR4WCGeQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
