@@ -1,12 +1,17 @@
 package com.usfca.greenhomes;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -27,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
 public class UserProfile extends AppCompatActivity {
 
@@ -176,6 +182,17 @@ public class UserProfile extends AppCompatActivity {
         if(ProfileData.groups.equals("Group2")){            //Start the MyService class only if the user has selected Message Service
             if(!MyServices.started){
                 startService(intent4);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.logo)
+                        .setContentTitle("Notification Service Started!")
+                        .setContentText("at " + new Date())
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0, noti.build());
             }
         }
         else{
@@ -313,6 +330,17 @@ public class UserProfile extends AppCompatActivity {
         else if(grp2.isChecked()){
             if(!MyServices.started){
                 startService(intent4);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.logo)
+                        .setContentTitle("Notification Service Started!")
+                        .setContentText("at " + new Date())
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0, noti.build());
             }
         }
         else if(grp3.isChecked()){

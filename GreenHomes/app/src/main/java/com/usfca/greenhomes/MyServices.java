@@ -6,9 +6,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -39,18 +42,6 @@ public class MyServices extends Service {
                 InstanceID instanceID = InstanceID.getInstance(getApplicationContext());
                 String token = instanceID.getToken("918094878188", GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
                 regToken = token;
-                Log.i("Token: ", token);
-                /*PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
-                Notification noti = new Notification.Builder(getApplicationContext()).setTicker("You have opted for message service in greenhomes")
-                                    .setContentTitle("Make your light dimmer")
-                                    .setContentText("at " + new Date())
-                                    .setOnlyAlertOnce(true)
-                                    .setAutoCancel(true)
-                                    .setSmallIcon(R.drawable.logo)
-                                    .setContentIntent(pendingIntent).getNotification();
-                noti.flags = Notification.FLAG_AUTO_CANCEL;
-                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, noti);*/
                 new MyHTTPPostRequestsSendToken().execute();
             }catch(Exception e){
                 System.out.println(e);
@@ -63,24 +54,23 @@ public class MyServices extends Service {
         started = true;
         Thread thread = new Thread(new ServiceThread(startId));
         thread.start();
-        //startService(new Intent(this, MyInstanceIDListenerService.class));
-        //return super.onStartCommand(intent, flags, startId);
+
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         started = false;
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
-        Notification noti = new Notification.Builder(getApplicationContext()).setTicker("You have left the message service option")
-                            .setContentTitle("No more notifications now!")
-                            .setOnlyAlertOnce(true)
-                            .setAutoCancel(true)
-                            .setSmallIcon(R.drawable.logo)
-                            .setContentIntent(pendingIntent).getNotification();
-        noti.flags = Notification.FLAG_AUTO_CANCEL;
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("No more notifications now!")
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, noti);
+        notificationManager.notify(0, noti.build());
         super.onDestroy();
     }
 
@@ -136,43 +126,31 @@ public class MyServices extends Service {
             super.onPostExecute(result);
             if (result.equals("Error")) {
                 stopSelf(service);
-                Toast.makeText(getApplicationContext(), "We could not start the notification service due to issues at our end. Sorry for the inconvenience, please try again later!", Toast.LENGTH_LONG).show();
-            }
-            else{
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(), 0);
-                Notification noti = new Notification.Builder(getApplicationContext()).setTicker("You have opted for message service in greenhomes")
-                                    .setContentTitle("Notification Service Started!")
-                                    .setContentText("at " + new Date())
-                                    .setOnlyAlertOnce(true)
-                                    .setAutoCancel(true)
-                                    .setSmallIcon(R.drawable.logo)
-                                    .setContentIntent(pendingIntent).getNotification();
-                noti.flags = Notification.FLAG_AUTO_CANCEL;
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.logo)
+                        .setContentTitle("Notification Service Stopped!")
+                        .setContentText("Issues occurred at " + new Date())
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
                 NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, noti);
+                notificationManager.notify(0, noti.build());
             }
+            /*else{
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.logo)
+                        .setContentTitle("Notification Service Started!")
+                        .setContentText("at " + new Date())
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.notify(0, noti.build());
+            }*/
         }
     }
-
-    /*@Override
-    protected void onHandleIntent(Intent intent) {
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
-        Notification noti = new Notification.Builder(this).setTicker("You have opted for message service in greenhomes")
-                .setContentTitle("Message service notification service is in progress..")
-                .setContentText("contacting server in regular intervals")
-                .setSmallIcon(R.drawable.logo)
-                .setContentIntent(pendingIntent).getNotification();
-        noti.flags = Notification.FLAG_GROUP_SUMMARY;
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, noti);
-        Log.i("Push Notification", "handling intent");
-        try {
-            InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken("918094878188", GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            Log.i("Token: ", token);
-            wait(2000);
-        }catch(Exception e){
-            System.out.println(e);
-        }
-    }*/
 }
