@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -182,15 +183,18 @@ public class UserProfile extends AppCompatActivity {
         if(ProfileData.groups.equals("Group2")){            //Start the MyService class only if the user has selected Message Service
             if(!MyServices.started){
                 startService(intent4);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
                 Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.drawable.logo)
                         .setContentTitle("Notification Service Started!")
                         .setContentText("at " + new Date())
+                        .setGroup("GreenHomes")
+                        .setGroupSummary(true)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
+                //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                 NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, noti.build());
             }
@@ -330,15 +334,18 @@ public class UserProfile extends AppCompatActivity {
         else if(grp2.isChecked()){
             if(!MyServices.started){
                 startService(intent4);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
                 Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.drawable.logo)
                         .setContentTitle("Notification Service Started!")
                         .setContentText("at " + new Date())
+                        .setGroup("GreenHomes")
+                        .setGroupSummary(true)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
+                //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
                 NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, noti.build());
             }

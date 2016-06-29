@@ -148,7 +148,6 @@
             android:name=".MyServices"
             android:exported="false">
         </service>
-
     </application>
 
 </manifest>

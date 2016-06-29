@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
@@ -19,15 +20,22 @@ public class MyGcmListenerService extends GcmListenerService {
         Log.d("GcmListener Message: ", "Data: " + data.getString("gcm.notification.title"));
         String contentTitle = data.getString("gcm.notification.title");
         String contentText = data.getString("gcm.notification.body");
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), UserProfile.class), PendingIntent.FLAG_ONE_SHOT);
+        //Intent yesIn = new Intent(this, YesIntent.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
+        //PendingIntent yesIntent = PendingIntent.getBroadcast(this, 0, yesIn, PendingIntent.FLAG_UPDATE_CURRENT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.logo)
-                .setContentTitle(contentTitle)
-                .setContentText(contentText + "at " + new Date())
+                .setContentTitle(new Date().toString())
+                .setContentText(contentText)
+                .setGroup("GreenHomes")
+                .setGroupSummary(true)
+                //.addAction(R.drawable.thumbpup, "", yesIntent)
+                //.addAction(R.drawable.thumbpdown, "", yesIntent)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
+        //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, noti.build());
     }
