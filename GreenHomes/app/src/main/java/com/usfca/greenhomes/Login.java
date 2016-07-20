@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -73,6 +74,9 @@ public class Login extends AppCompatActivity {
         }
         emailID.setText(pref.getString(PREF_USERNAME, null));
         password.setText(pref.getString(PREF_PASSWORD, null));
+
+        //to hide the keyboard appearing automatically
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override

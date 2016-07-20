@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import org.json.JSONObject;
@@ -91,6 +92,9 @@ public class ContactUs extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
         });
+
+        //to hide the keyboard appearing automatically
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     public void onSendCommentsButtonClickListener(View v) {

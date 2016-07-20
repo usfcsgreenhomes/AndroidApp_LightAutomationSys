@@ -14,13 +14,13 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.usfca.greenhomes.AboutUs"
-        android:background="@drawable/aboutus2">
+        android:background="#eff7e5">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="We are the leaders in providing the ligthing recommendation to our smart users so that they can save their monthly electricity expenses. We recommend using Philips HUE light bulbs to our users so that we can recommend the correct brightness level as per the current time/ weather of their location. Making users aware of high brightness of their light bulbs are our prime objective. We hope that you enjoy our services."
+            android:text="Thank you for participating in the Green Homes Lighting Recommendation study. The purpose of the study is to better understand how homes use light dimmer switches to reduce energy usage. Contact us at lighting@greenhomestudy.com if you have any questions about this project."
             android:id="@+id/textView4"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Thank you &amp; See you soon!"
+            android:text="Thank you again &amp; See you soon!"
             android:id="@+id/textView5"
             android:textColor="#080c02"
             android:layout_alignParentBottom="true"

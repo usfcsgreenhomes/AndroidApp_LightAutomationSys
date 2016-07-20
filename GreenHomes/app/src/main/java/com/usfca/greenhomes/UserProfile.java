@@ -1,26 +1,24 @@
 package com.usfca.greenhomes;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -33,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 
 public class UserProfile extends AppCompatActivity {
 
@@ -44,13 +41,10 @@ public class UserProfile extends AppCompatActivity {
     Intent intent4;
     EditText nickName;
     EditText phoneNo;
-    EditText userID;
     TextView emailID;
-    RadioGroup rgGroup;
+    TextView rgGroup;
     RadioGroup rgWait;
-    RadioGroup rgLight;
     ImageView waitInt;
-    ImageView lightInt;
     ProgressDialog progressBar;
     String user;
     String groups;
@@ -58,6 +52,10 @@ public class UserProfile extends AppCompatActivity {
     String lightTime;
     String name;
     String phone;
+    PopupWindow popupWindowSnooze;
+    boolean snoozePopup;
+    PopupWindow popupWindowGroup;
+    boolean snoozeGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,31 +68,24 @@ public class UserProfile extends AppCompatActivity {
         ab.setTitle("welcome!");
         ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF172604")));
         waitInt = (ImageView)findViewById(R.id.imageView8);
-        lightInt = (ImageView)findViewById(R.id.imageView9);
         nickName = (EditText)findViewById(R.id.editText3) ;
         phoneNo = (EditText)findViewById(R.id.editText4);
-        userID = (EditText)findViewById(R.id.editText5);
         emailID = (TextView)findViewById(R.id.textView7);
-        rgGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        rgGroup = (TextView)findViewById(R.id.textView11);
         rgWait = (RadioGroup)findViewById(R.id.radioGroup3);
-        rgLight = (RadioGroup)findViewById(R.id.radioGroup2);
-        rgWait.check(R.id.wait1800);
-        rgLight.check(R.id.light3600);
+        rgWait.check(R.id.wait3600);
         nickName.setText(ProfileData.nickname);
         phoneNo.setText(ProfileData.phone);
-        userID.setText(ProfileData.userID);
         emailID.setText(ProfileData.emailID);
         if(ProfileData.groups.equals("Group1")){
             rgWait.setVisibility(View.GONE);
-            rgLight.setVisibility(View.GONE);
             waitInt.setVisibility(View.GONE);
-            lightInt.setVisibility(View.GONE);
-            rgGroup.check(R.id.Group1);
+            rgGroup.setText("Manual Group");
+            groups = "Group1";
         }
         if(ProfileData.groups.equals("Group3")){
-            rgLight.setVisibility(View.GONE);
-            lightInt.setVisibility(View.GONE);
-            rgGroup.check(R.id.Group3);
+            rgGroup.setText("Automatic Group");
+            groups = "Group3";
         }
         if(ProfileData.groups.equals("Group2") || ProfileData.groups.equals("Group3")){
             if(ProfileData.waitInterval.equals("1800")){
@@ -114,22 +105,8 @@ public class UserProfile extends AppCompatActivity {
             }
         }
         if(ProfileData.groups.equals("Group2")){
-            rgGroup.check(R.id.Group2);
-            if(ProfileData.lightInterval.equals("1800")){
-                rgLight.check(R.id.light1800);
-            }
-            else if(ProfileData.lightInterval.equals("3600")){
-                rgLight.check(R.id.light3600);
-            }
-            else if(ProfileData.lightInterval.equals("5400")){
-                rgLight.check(R.id.light5400);
-            }
-            else if(ProfileData.lightInterval.equals("7200")){
-                rgLight.check(R.id.light7200);
-            }
-            else{
-                rgLight.check(R.id.light9000);
-            }
+            rgGroup.setText("Messaging Group");
+            groups = "Group2";
         }
         phoneNo.addTextChangedListener(new TextWatcher() {
             @Override
@@ -138,21 +115,6 @@ public class UserProfile extends AppCompatActivity {
                     phoneNo.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.checkcircle,0);
                 else
                     phoneNo.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.warning,0);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-        });
-        userID.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length() < 8 || s.length() > 100)
-                    userID.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.warning,0);
-                else
-                    userID.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.checkcircle,0);
             }
 
             @Override
@@ -183,20 +145,6 @@ public class UserProfile extends AppCompatActivity {
         if(ProfileData.groups.equals("Group2")){            //Start the MyService class only if the user has selected Message Service
             if(!MyServices.started){
                 startService(intent4);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
-                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.logo)
-                        .setContentTitle("Notification Service Started!")
-                        .setContentText("at " + new Date())
-                        .setGroup("GreenHomes")
-                        .setGroupSummary(true)
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, noti.build());
             }
         }
         else{
@@ -204,6 +152,21 @@ public class UserProfile extends AppCompatActivity {
                 stopService(intent4);
             }
         }
+
+        /* Popup for Snooze Time */
+        snoozePopup = false;
+        LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = layoutInflater.inflate(R.layout.popupsnooze, null);
+        popupWindowSnooze = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        /* Popup for Group Information  */
+        snoozeGroup = false;
+        LayoutInflater layoutInflater3 = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView3 = layoutInflater3.inflate(R.layout.popupgroup, null);
+        popupWindowGroup  = new PopupWindow(popupView3, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        //to hide the keyboard appearing automatically
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
@@ -233,41 +196,47 @@ public class UserProfile extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onGroup1RadioButtonListener(View v){
-        rgWait.setVisibility(View.GONE);
-        rgLight.setVisibility(View.GONE);
-        waitInt.setVisibility(View.GONE);
-        lightInt.setVisibility(View.GONE);
+    public void onBackgroundClickListener(View v){
+        if(snoozePopup){
+            popupWindowSnooze.dismiss();
+            snoozePopup = false;
+        }
+        if(snoozeGroup){
+            popupWindowGroup.dismiss();
+            snoozeGroup = false;
+        }
+    }
+    public void onSnoozeClickListener(View v){
+        if(!snoozePopup){
+            popupWindowSnooze.showAsDropDown(v, 50, -30);
+            snoozePopup = true;
+        }
+        else {
+            popupWindowSnooze.dismiss();
+            snoozePopup = false;
+        }
     }
 
-    public void onGroup2RadioButtonListener(View v){
-        rgWait.setVisibility(View.VISIBLE);
-        rgLight.setVisibility(View.VISIBLE);
-        waitInt.setVisibility(View.VISIBLE);
-        lightInt.setVisibility(View.VISIBLE);
-    }
-
-    public void onGroup3RadioButtonListener(View v){
-        rgWait.setVisibility(View.VISIBLE);
-        waitInt.setVisibility(View.VISIBLE);
-        rgLight.setVisibility(View.GONE);
-        lightInt.setVisibility(View.GONE);
+    public void onGroupClickListener(View v){
+        if(!snoozeGroup){
+            popupWindowGroup.showAsDropDown(v, 50, -30);
+            snoozeGroup = true;
+        }
+        else {
+            popupWindowGroup.dismiss();
+            snoozeGroup = false;
+        }
     }
 
     public void onClickSaveButtonListener(View v) {
         progressBar = ProgressDialog.show(this, "", "Saving your profile...", true);     //Dialogue Title is kept blank
-        user = userID.getText().toString();
+        user = ProfileData.userID;
+        lightTime = ProfileData.lightInterval;
         phone = phoneNo.getText().toString();
         name = nickName.getText().toString();
-        if (user.equals("") || name.equals("") || phone.equals("")) {
+        if (name.equals("") || phone.equals("")) {
             progressBar.hide();
             Toast.makeText(getApplicationContext(), "One of the input field(s) seems to be blank. Please try again!", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (user.length() < 8 || user.length() > 100) {
-            progressBar.hide();
-            userID.setError("Too short or too long");
-            userID.setSelection(0);
             return;
         }
         if (name.length() < 6 || name.length() > 10) {
@@ -282,15 +251,6 @@ public class UserProfile extends AppCompatActivity {
             phoneNo.setSelection(0);
             return;
         }
-        RadioButton grp1 = (RadioButton) findViewById(R.id.Group1);
-        RadioButton grp2 = (RadioButton) findViewById(R.id.Group2);
-        RadioButton grp3 = (RadioButton) findViewById(R.id.Group3);
-        if (grp1.isChecked())
-            groups = "Group1";
-        else if(grp2.isChecked())
-            groups = "Group2";
-        else if(grp3.isChecked())
-            groups = "Group3";
         if(groups.equals("Group2") || groups.equals("Group3")){
             RadioButton wait1 = (RadioButton) findViewById(R.id.wait1800);
             RadioButton wait2 = (RadioButton) findViewById(R.id.wait3600);
@@ -306,55 +266,9 @@ public class UserProfile extends AppCompatActivity {
             else if(wait4.isChecked())
                 waitTime = "10800";
             else if(wait5.isChecked())
-                waitTime = "21600";
-        }
-        if(groups.equals("Group2")){
-            RadioButton light1 = (RadioButton) findViewById(R.id.light1800);
-            RadioButton light2 = (RadioButton) findViewById(R.id.light3600);
-            RadioButton light3 = (RadioButton) findViewById(R.id.light5400);
-            RadioButton light4 = (RadioButton) findViewById(R.id.light7200);
-            RadioButton light5 = (RadioButton) findViewById(R.id.light9000);
-            if(light1.isChecked())
-                lightTime = "1800";
-            else if(light2.isChecked())
-                lightTime = "3600";
-            else if(light3.isChecked())
-                lightTime = "5400";
-            else if(light4.isChecked())
-                lightTime = "7200";
-            else if(light5.isChecked())
-                lightTime = "9000";
+                waitTime = "2147483647";        //21600
         }
         new MyHTTPPostRequestsSave().execute();
-        if (grp1.isChecked()){
-            if(MyServices.started){
-                stopService(intent4);
-            }
-        }
-        else if(grp2.isChecked()){
-            if(!MyServices.started){
-                startService(intent4);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
-                Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.logo)
-                        .setContentTitle("Notification Service Started!")
-                        .setContentText("at " + new Date())
-                        .setGroup("GreenHomes")
-                        .setGroupSummary(true)
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-                NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(0, noti.build());
-            }
-        }
-        else if(grp3.isChecked()){
-            if(MyServices.started){
-                stopService(intent4);
-            }
-        }
     }
 
     public class MyHTTPPostRequestsSave extends AsyncTask<String, String, String> {
@@ -428,6 +342,7 @@ public class UserProfile extends AppCompatActivity {
                 }
                 else if(groups.equals("Group3")){
                     ProfileData.waitInterval = waitTime;
+                    ProfileData.lightInterval = null;
                 }
             }
         }

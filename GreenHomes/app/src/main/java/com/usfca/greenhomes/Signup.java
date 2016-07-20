@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,6 +160,9 @@ public class Signup extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
         });
+
+        //to hide the keyboard appearing automatically
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
