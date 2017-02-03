@@ -21,7 +21,10 @@ public class MyGcmListenerService extends GcmListenerService {
         String contentTitle = data.getString("gcm.notification.title");
         String contentText = data.getString("gcm.notification.body");
         //Intent yesIn = new Intent(this, YesIntent.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
+        Intent yesOrNoIn = new Intent(this, YesOrNoIntent.class);
+        yesOrNoIn.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent yesOrNoPin = PendingIntent.getActivity(getApplicationContext(), 0, yesOrNoIn, PendingIntent.FLAG_UPDATE_CURRENT);
+        //PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
         //PendingIntent yesIntent = PendingIntent.getBroadcast(this, 0, yesIn, PendingIntent.FLAG_UPDATE_CURRENT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
@@ -34,7 +37,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 //.addAction(R.drawable.thumbpdown, "", yesIntent)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(yesOrNoPin);
         //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, noti.build());
