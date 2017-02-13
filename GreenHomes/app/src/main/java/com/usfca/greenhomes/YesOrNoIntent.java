@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class YesOrNoIntent extends AppCompatActivity {
     }
 
     public void onYesButtonListener(View v) {
+        progressBar = ProgressDialog.show(this, "", "Sending the request...", true); //Dialogue Title is kept empty
         new MyHTTPGetRequestYes().execute();
 
     }
@@ -73,12 +75,15 @@ public class YesOrNoIntent extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
+            Log.d("Response after request", response);
+            Toast.makeText(getApplicationContext(), "Response after request: "+response, Toast.LENGTH_SHORT).show();
             if (response.equals("success :)")) {
                 Toast.makeText(getApplicationContext(), "Request for Yes Successful!!! ", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(), "Request for Yes Failed!!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Request for Yes Failed!!!"+String.valueOf(response), Toast.LENGTH_LONG).show();
             }
             progressBar.hide();
+            moveTaskToBack(true);
         }
     }
 }
