@@ -158,8 +158,8 @@
 
         <activity
             android:name=".YesOrNoIntent"
-            android:label="Yes/No"
-            android:parentActivityName=".UserProfile">
+            android:label="@string/title_activity_yesornointent"
+            android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="com.usfca.greenhomes_Group2_NOTIFICATION" />
 

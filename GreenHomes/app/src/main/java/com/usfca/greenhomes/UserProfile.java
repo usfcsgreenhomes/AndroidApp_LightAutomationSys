@@ -77,6 +77,7 @@ public class UserProfile extends AppCompatActivity {
         nickName.setText(ProfileData.nickname);
         phoneNo.setText(ProfileData.phone);
         emailID.setText(ProfileData.emailID);
+        Toast.makeText(getApplicationContext(),"UserID is: "+ProfileData.userID,Toast.LENGTH_LONG).show();
         if(ProfileData.groups.equals("Group1")){
             rgWait.setVisibility(View.GONE);
             waitInt.setVisibility(View.GONE);

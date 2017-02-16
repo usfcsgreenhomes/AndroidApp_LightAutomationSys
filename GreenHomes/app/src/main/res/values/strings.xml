@@ -9,6 +9,7 @@
     <string name="title_activity_profile">Welcome</string>
     <string name="title_activity_password">Forgot Password</string>
     <string name="title_activity_passwordsent">Password Sent</string>
+    <string name="title_activity_yesornointent">Yes/No</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
