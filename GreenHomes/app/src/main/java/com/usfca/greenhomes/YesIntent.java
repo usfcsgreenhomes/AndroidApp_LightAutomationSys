@@ -27,7 +27,7 @@ public class YesIntent extends BroadcastReceiver {
         //Toast.makeText(context, "Yes button pressed", Toast.LENGTH_SHORT).show();
         new MyHTTPGetRequestYes().execute();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(intent.getExtras().getInt("id"));
+        notificationManager.cancel(0);
     }
     public class MyHTTPGetRequestYes extends AsyncTask<String, String, String> {
 

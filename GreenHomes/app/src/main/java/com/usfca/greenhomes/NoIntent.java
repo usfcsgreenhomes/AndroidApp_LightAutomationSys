@@ -15,6 +15,6 @@ public class NoIntent extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, " Rejected the Recommendation", Toast.LENGTH_LONG).show();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(intent.getExtras().getInt("id"));
+        notificationManager.cancel(0);
     }
 }

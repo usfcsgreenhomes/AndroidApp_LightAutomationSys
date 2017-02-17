@@ -23,9 +23,9 @@ public class MyGcmListenerService extends GcmListenerService {
         String contentTitle = data.getString("gcm.notification.title");
         String contentText = data.getString("gcm.notification.body");
         Intent yesIn = new Intent("yes_intent");
-        yesIn.putExtra("id", notiId);
+        //yesIn.putExtra("id", notiId);
         Intent noIn = new Intent("no_intent");
-        noIn.putExtra("id", notiId);
+        //noIn.putExtra("id", notiId);
         Intent yesOrNoIn = new Intent(this, YesOrNoIntent.class);
         yesOrNoIn.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent yesOrNoPin = PendingIntent.getActivity(getApplicationContext(), 0, yesOrNoIn, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -46,7 +46,7 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentIntent(yesOrNoPin);
         //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(notiId, noti.build());
+        notificationManager.notify(0, noti.build());
     }
 
     /*@Override
