@@ -31,7 +31,7 @@ public class MyGcmListenerService extends GcmListenerService {
         PendingIntent yesOrNoPin = PendingIntent.getActivity(getApplicationContext(), 0, yesOrNoIn, PendingIntent.FLAG_UPDATE_CURRENT);
         //PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
         PendingIntent yesIntent = PendingIntent.getBroadcast(this, 0, yesIn, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent noIntent = PendingIntent.getBroadcast(this, 0, noIn, 0);
+        PendingIntent noIntent = PendingIntent.getBroadcast(this, 0, noIn, PendingIntent.FLAG_UPDATE_CURRENT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.logo)
