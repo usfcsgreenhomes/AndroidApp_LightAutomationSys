@@ -105,7 +105,7 @@ public class YesOrNoIntent extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             Log.d("Response after request", response);
-            Toast.makeText(getApplicationContext(), "Response after request: "+response, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Response after request: "+response, Toast.LENGTH_SHORT).show();
             if (response.equals("success :)")) {
                 Toast.makeText(getApplicationContext(), "Request for Yes Successful!!! ", Toast.LENGTH_LONG).show();
             } else {

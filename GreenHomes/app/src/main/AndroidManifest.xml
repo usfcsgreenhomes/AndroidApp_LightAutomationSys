@@ -166,6 +166,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <receiver android:name=".YesIntent">
+            <intent-filter>
+                <action android:name="yes_intent"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".NoIntent">
+            <intent-filter>
+                <action android:name="no_intent"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

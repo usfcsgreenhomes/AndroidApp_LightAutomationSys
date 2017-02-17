@@ -14,18 +14,24 @@ import com.google.android.gms.gcm.GcmListenerService;
 import java.util.Date;
 
 public class MyGcmListenerService extends GcmListenerService {
+    private int notiId;
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
+        notiId = (int ) System.currentTimeMillis();
         Log.d("GcmListener Message: ", "Data: " + data.getString("gcm.notification.title"));
         String contentTitle = data.getString("gcm.notification.title");
         String contentText = data.getString("gcm.notification.body");
-        //Intent yesIn = new Intent(this, YesIntent.class);
+        Intent yesIn = new Intent("yes_intent");
+        yesIn.putExtra("id", notiId);
+        Intent noIn = new Intent("no_intent");
+        noIn.putExtra("id", notiId);
         Intent yesOrNoIn = new Intent(this, YesOrNoIntent.class);
         yesOrNoIn.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent yesOrNoPin = PendingIntent.getActivity(getApplicationContext(), 0, yesOrNoIn, PendingIntent.FLAG_UPDATE_CURRENT);
         //PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_ONE_SHOT);
-        //PendingIntent yesIntent = PendingIntent.getBroadcast(this, 0, yesIn, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent yesIntent = PendingIntent.getBroadcast(this, 0, yesIn, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent noIntent = PendingIntent.getBroadcast(this, 0, noIn, 0);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.logo)
@@ -33,14 +39,14 @@ public class MyGcmListenerService extends GcmListenerService {
                 .setContentText(contentText)
                 .setGroup("GreenHomes")
                 .setGroupSummary(true)
-                //.addAction(R.drawable.thumbpup, "", yesIntent)
-                //.addAction(R.drawable.thumbpdown, "", yesIntent)
+                .addAction( new NotificationCompat.Action(R.drawable.thumbpup, "Yes", yesIntent))
+                .addAction( new NotificationCompat.Action(R.drawable.thumbpdown, "No", noIntent))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(yesOrNoPin);
         //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, noti.build());
+        notificationManager.notify(notiId, noti.build());
     }
 
     /*@Override
