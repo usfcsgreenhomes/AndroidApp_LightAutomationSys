@@ -138,12 +138,12 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.5hr"
+            android:text="ON"
             android:id="@+id/wait1800"
             android:checked="false"
             android:textColor="#012807" />
 
-        <RadioButton
+        <!--<RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1hr"
@@ -165,7 +165,7 @@
             android:text="3hr"
             android:id="@+id/wait10800"
             android:checked="false"
-            android:textColor="#012807" />
+            android:textColor="#012807" />-->
 
         <RadioButton
             android:layout_width="wrap_content"

@@ -44,10 +44,7 @@ public class Login extends AppCompatActivity {
     boolean imageSwitch;
     String user;
     String pass;
-    SharedPreferences pref;
-    static final String PREF_USERNAME = "username";
-    static final String PREF_PASSWORD = "password";
-    static final String PREF_FILE = "GreenHomes";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +64,23 @@ public class Login extends AppCompatActivity {
         emailID = (EditText) findViewById(R.id.editText);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         imageSwitch = true;
-        pref = getSharedPreferences(PREF_FILE, MODE_PRIVATE);
-        if(ProfileData.loggedin){
+        ProfileData.pref = getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE);
+        if(ProfileData.loggedin || ProfileData.pref.getBoolean(ProfileData.PREF_LOGGEDIN, false)){
+            if(!ProfileData.loggedin){
+                ProfileData.emailID = ProfileData.pref.getString(ProfileData.PREF_EMAILID, null);
+                ProfileData.userID = ProfileData.pref.getString(ProfileData.PREF_USERID, null);
+                ProfileData.nickname = ProfileData.pref.getString(ProfileData.PREF_NICKNAME, null);
+                ProfileData.phone = ProfileData.pref.getString(ProfileData.PREF_PHONE, null);
+                ProfileData.groups = ProfileData.pref.getString(ProfileData.PREF_GROUPS, null);
+                ProfileData.waitInterval = ProfileData.pref.getString(ProfileData.PREF_WAITINTERVAL, null);
+                ProfileData.lightInterval = ProfileData.pref.getString(ProfileData.PREF_LIGHTINTERVAL, null);
+                ProfileData.loggedin = true;
+            }
             intent4 = new Intent(Login.this, UserProfile.class);
             startActivity(intent4);
         }
-        emailID.setText(pref.getString(PREF_USERNAME, null));
-        password.setText(pref.getString(PREF_PASSWORD, null));
+        emailID.setText(ProfileData.pref.getString(ProfileData.PREF_USERNAME, null));
+        password.setText(ProfileData.pref.getString(ProfileData.PREF_PASSWORD, null));
 
         //to hide the keyboard appearing automatically
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -140,11 +147,11 @@ public class Login extends AppCompatActivity {
             return;
         }
         if(checkBox.isChecked()){
-            getSharedPreferences(PREF_FILE, MODE_PRIVATE)
+            getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE)
                     .edit()
-                    .putString(PREF_USERNAME, emailID.getText().toString())
-                    .putString(PREF_PASSWORD, password.getText().toString())
-                    .commit();
+                    .putString(ProfileData.PREF_USERNAME, emailID.getText().toString())
+                    .putString(ProfileData.PREF_PASSWORD, password.getText().toString())
+                    .apply();
         }
         new MyHTTPPostRequestsLogin().execute();
     }
@@ -181,7 +188,8 @@ public class Login extends AppCompatActivity {
                 return "Error";
             }finally{
                 try {
-                    buf.close();
+                    if (buf != null)
+                        buf.close();
                     if(connection != null)
                         connection.disconnect();
                 } catch (IOException e) {
@@ -208,11 +216,33 @@ public class Login extends AppCompatActivity {
                     ProfileData.waitInterval = jsonObject.getString("Wait");
                     ProfileData.lightInterval = jsonObject.getString("LightInterval");
                     ProfileData.loggedin = true;
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 progressBar.hide();
-                startActivity(intent4);
+                getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE)
+                        .edit()
+                        .putString(ProfileData.PREF_EMAILID, ProfileData.emailID)
+                        .putString(ProfileData.PREF_USERID, ProfileData.userID)
+                        .putString(ProfileData.PREF_NICKNAME, ProfileData.nickname)
+                        .putString(ProfileData.PREF_PHONE, ProfileData.phone)
+                        .putString(ProfileData.PREF_GROUPS, ProfileData.groups)
+                        .putString(ProfileData.PREF_WAITINTERVAL, ProfileData.waitInterval)
+                        .putString(ProfileData.PREF_LIGHTINTERVAL, ProfileData.lightInterval)
+                        .putBoolean(ProfileData.PREF_LOGGEDIN, ProfileData.loggedin)
+                        .apply();
+                if (YesOrNoIntent.isYesornointent()){
+                    YesOrNoIntent.setYesornointent(false);
+                    Intent intentyesorno = new Intent(Login.this, YesOrNoIntent.class);
+                    startActivity(intentyesorno);
+                } else if (YesIntent.isYesintent()){
+                    YesIntent.setYesintent(false);
+                    YesIntent.onLoginYes();
+                    startActivity(intent4);
+                } else
+                    startActivity(intent4);
+
             }
         }
     }

@@ -19,17 +19,45 @@ import java.net.URL;
 
 public class YesIntent extends BroadcastReceiver {
     static String remoteIP = "eclipse.umbc.edu";
-    Context context;
+    static public boolean yesintent = false;
+
+    public static boolean isYesintent() {
+        return yesintent;
+    }
+
+    public static void setYesintent(boolean yesintent) {
+        YesIntent.yesintent = yesintent;
+    }
+
+    private static Context context;
+
+    public static void onLoginYes(){
+        /*MyHTTPGetRequestYes requestYes = new MyHTTPGetRequestYes(context);
+        requestYes.execute();*/
+        new MyHTTPGetRequestYes().execute();
+        /*NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(0);*/
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
+        ProfileData.pref = context.getSharedPreferences(ProfileData.PREF_FILE, Context.MODE_PRIVATE);
         Log.i("Option: ", context.toString());
-        //Toast.makeText(context, "Yes button pressed", Toast.LENGTH_SHORT).show();
-        new MyHTTPGetRequestYes().execute();
+        if (!ProfileData.pref.getBoolean(ProfileData.PREF_LOGGEDIN, false)){
+            yesintent = true;
+            Intent intentLogin = new Intent(context.getApplicationContext(), MainActivity.class);
+            intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intentLogin);
+        } else {
+            new MyHTTPGetRequestYes().execute();
+        /*MyHTTPGetRequestYes requestYes = new MyHTTPGetRequestYes(context);
+        requestYes.execute();*/
+        }
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
+
     }
-    public class MyHTTPGetRequestYes extends AsyncTask<String, String, String> {
+    public static class MyHTTPGetRequestYes extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... strings) {
@@ -40,7 +68,7 @@ public class YesIntent extends BroadcastReceiver {
             StringBuffer sbuf = new StringBuffer();
             String line = "";
             try {
-                url = new URL("https://" + remoteIP + "/greenhome/set_light_from_rec?userid="+ProfileData.userID+"&group="+ProfileData.groups);
+                url = new URL("https://" + remoteIP + "/greenhome/set_light_from_rec?userid="+ProfileData.pref.getString(ProfileData.PREF_USERID, null)+"&group="+ProfileData.pref.getString(ProfileData.PREF_GROUPS, null));
                 connection = (HttpURLConnection) url.openConnection();
                 buf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 while ((line = buf.readLine()) != null) {
@@ -51,7 +79,8 @@ public class YesIntent extends BroadcastReceiver {
                 return "Error";
             } finally {
                 try {
-                    buf.close();
+                    if (buf != null)
+                        buf.close();
                     if (connection != null)
                         connection.disconnect();
                 } catch (Exception e) {
@@ -63,7 +92,6 @@ public class YesIntent extends BroadcastReceiver {
         @Override
         protected void onPostExecute(String response) {
             Log.d("Response after request", response);
-            //Toast.makeText(context, "Response after request: "+response, Toast.LENGTH_SHORT).show();
             if (response.equals("success :)")) {
                 Toast.makeText(context, "Request for Yes Successful!!! ", Toast.LENGTH_LONG).show();
             } else {

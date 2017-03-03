@@ -1,6 +1,7 @@
 package com.usfca.greenhomes;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,18 @@ import java.net.URL;
 
 public class YesOrNoIntent extends AppCompatActivity {
     static String remoteIP = "eclipse.umbc.edu";
+    static public boolean yesornointent = false;
+    private Context context = this;
+
+    public static boolean isYesornointent() {
+        return yesornointent;
+    }
+
+    public static void setYesornointent(boolean yesornointent) {
+        YesOrNoIntent.yesornointent = yesornointent;
+    }
+
+
     ProgressDialog progressBar;
     Intent intent;
     Intent intent2;
@@ -31,6 +44,11 @@ public class YesOrNoIntent extends AppCompatActivity {
         intent = new Intent(YesOrNoIntent.this, MainActivity.class);
         intent2 = new Intent(YesOrNoIntent.this, ContactUs.class);
         intent3 = new Intent(YesOrNoIntent.this, AboutUs.class);
+        ProfileData.pref = getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE);
+        if(!ProfileData.pref.getBoolean(ProfileData.PREF_LOGGEDIN, false)){
+            yesornointent = true;
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -45,6 +63,10 @@ public class YesOrNoIntent extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.logout:
                 ProfileData.loggedin = false;
+                getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE)
+                        .edit()
+                        .putBoolean(ProfileData.PREF_LOGGEDIN, false)
+                        .apply();
                 Toast.makeText(getApplicationContext(), "You have been logged out successfully!", Toast.LENGTH_LONG).show();
                 startActivity(intent);
                 break;
@@ -63,12 +85,13 @@ public class YesOrNoIntent extends AppCompatActivity {
     public void onYesButtonListener(View v) {
         progressBar = ProgressDialog.show(this, "", "Sending the request...", true); //Dialogue Title is kept empty
         new MyHTTPGetRequestYes().execute();
+        /*MyHTTPGetRequestYes myHTTPGetRequestYes = new MyHTTPGetRequestYes(context);
+        myHTTPGetRequestYes.execute();*/
 
     }
 
     public void onNoButtonListener(View v) {
         startActivity(intent);
-        //moveTaskToBack(true);
     }
 
     public class MyHTTPGetRequestYes extends AsyncTask<String, String, String> {
@@ -82,7 +105,7 @@ public class YesOrNoIntent extends AppCompatActivity {
             StringBuffer sbuf = new StringBuffer();
             String line = "";
             try {
-                url = new URL("https://" + remoteIP + "/greenhome/set_light_from_rec?userid="+ProfileData.userID+"&group="+ProfileData.groups);
+                url = new URL("https://" + remoteIP + "/greenhome/set_light_from_rec?userid="+ProfileData.pref.getString(ProfileData.PREF_USERID, null)+"&group="+ProfileData.pref.getString(ProfileData.PREF_GROUPS, null));
                 connection = (HttpURLConnection) url.openConnection();
                 buf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 while ((line = buf.readLine()) != null) {
@@ -93,7 +116,8 @@ public class YesOrNoIntent extends AppCompatActivity {
                 return "Error";
             } finally {
                 try {
-                    buf.close();
+                    if(buf != null)
+                        buf.close();
                     if (connection != null)
                         connection.disconnect();
                 } catch (Exception e) {
@@ -105,7 +129,6 @@ public class YesOrNoIntent extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             Log.d("Response after request", response);
-            //Toast.makeText(getApplicationContext(), "Response after request: "+response, Toast.LENGTH_SHORT).show();
             if (response.equals("success :)")) {
                 Toast.makeText(getApplicationContext(), "Request for Yes Successful!!! ", Toast.LENGTH_LONG).show();
             } else {
@@ -113,7 +136,6 @@ public class YesOrNoIntent extends AppCompatActivity {
             }
             progressBar.hide();
             startActivity(intent);
-            //moveTaskToBack(true);
         }
     }
 }
