@@ -105,7 +105,7 @@ public class YesOrNoIntent extends AppCompatActivity {
             StringBuffer sbuf = new StringBuffer();
             String line = "";
             try {
-                url = new URL("https://" + remoteIP + "/greenhome/set_light_from_rec?userid="+ProfileData.pref.getString(ProfileData.PREF_USERID, null)+"&group="+ProfileData.pref.getString(ProfileData.PREF_GROUPS, null));
+                url = new URL("https://" + remoteIP + "/greenhome/set_light_from_rec?userid="+ProfileData.pref.getString(ProfileData.PREF_USERID, null)+"&group="+ProfileData.pref.getString(ProfileData.PREF_GROUPS, null)+"&accept=yes");
                 connection = (HttpURLConnection) url.openConnection();
                 buf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 while ((line = buf.readLine()) != null) {
@@ -131,8 +131,10 @@ public class YesOrNoIntent extends AppCompatActivity {
             Log.d("Response after request", response);
             if (response.equals("success :)")) {
                 Toast.makeText(getApplicationContext(), "Request for Yes Successful!!! ", Toast.LENGTH_LONG).show();
+            } else if (response.equals("error :(")){
+                Toast.makeText(getApplicationContext(), "Request for Yes Failed. Check Internet Connection!!!"+String.valueOf(response), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getApplicationContext(), "Request for Yes Failed!!!"+String.valueOf(response), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Request for Yes Failed. Check Internet Connection!!!", Toast.LENGTH_LONG).show();
             }
             progressBar.hide();
             startActivity(intent);

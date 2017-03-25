@@ -43,12 +43,12 @@ public class UserProfile extends AppCompatActivity {
     EditText phoneNo;
     TextView emailID;
     TextView rgGroup;
-    RadioGroup rgWait;
+    //RadioGroup rgWait;
     ImageView waitInt;
     ProgressDialog progressBar;
     String user;
     String groups;
-    String waitTime;
+    String waitTime = "1800";
     String lightTime;
     String name;
     String phone;
@@ -72,13 +72,13 @@ public class UserProfile extends AppCompatActivity {
         phoneNo = (EditText)findViewById(R.id.editText4);
         emailID = (TextView)findViewById(R.id.textView7);
         rgGroup = (TextView)findViewById(R.id.textView11);
-        rgWait = (RadioGroup)findViewById(R.id.radioGroup3);
-        rgWait.check(R.id.wait1800);
+        /*rgWait = (RadioGroup)findViewById(R.id.radioGroup3);
+        rgWait.check(R.id.wait1800);*/
         nickName.setText(ProfileData.nickname);
         phoneNo.setText(ProfileData.phone);
         emailID.setText(ProfileData.emailID);
         if(ProfileData.groups.equals("Group1")){
-            rgWait.setVisibility(View.GONE);
+            //rgWait.setVisibility(View.GONE);
             waitInt.setVisibility(View.GONE);
             rgGroup.setText("Manual Group");
             groups = "Group1";
@@ -88,8 +88,10 @@ public class UserProfile extends AppCompatActivity {
             groups = "Group3";
         }
         if(ProfileData.groups.equals("Group2") || ProfileData.groups.equals("Group3") || ProfileData.groups.equals("Group4")){
-            if(ProfileData.waitInterval.equals("1800")){
-                rgWait.check(R.id.wait1800);
+            if(!ProfileData.waitInterval.equals("1800")){
+                waitTime = "1800";
+                new MyHTTPPostRequestsSave().execute();
+                //rgWait.check(R.id.wait1800);
             }
             /*else if(ProfileData.waitInterval.equals("3600")){
                 rgWait.check(R.id.wait3600);
@@ -99,10 +101,10 @@ public class UserProfile extends AppCompatActivity {
             }
             else if(ProfileData.waitInterval.equals("10800")){
                 rgWait.check(R.id.wait10800);
-            }*/
+            }*//*
             else{
                 rgWait.check(R.id.wait21600);
-            }
+            }*/
         }
         if(ProfileData.groups.equals("Group2")){
             rgGroup.setText("Automatic + Recommendation Group");
@@ -214,7 +216,7 @@ public class UserProfile extends AppCompatActivity {
             snoozeGroup = false;
         }
     }
-    public void onSnoozeClickListener(View v){
+    /*public void onSnoozeClickListener(View v){
         if(!snoozePopup){
             popupWindowSnooze.showAsDropDown(v, 50, -30);
             snoozePopup = true;
@@ -223,7 +225,7 @@ public class UserProfile extends AppCompatActivity {
             popupWindowSnooze.dismiss();
             snoozePopup = false;
         }
-    }
+    }*/
 
     public void onGroupClickListener(View v){
         if(!snoozeGroup){
@@ -260,12 +262,12 @@ public class UserProfile extends AppCompatActivity {
             return;
         }
         if(groups.equals("Group2") || groups.equals("Group3") || groups.equals("Group4")){
-            RadioButton wait1 = (RadioButton) findViewById(R.id.wait1800);
-            /*RadioButton wait2 = (RadioButton) findViewById(R.id.wait3600);
+            /*RadioButton wait1 = (RadioButton) findViewById(R.id.wait1800);
+            *//*RadioButton wait2 = (RadioButton) findViewById(R.id.wait3600);
             RadioButton wait3 = (RadioButton) findViewById(R.id.wait7200);
-            RadioButton wait4 = (RadioButton) findViewById(R.id.wait10800);*/
-            RadioButton wait5 = (RadioButton) findViewById(R.id.wait21600);
-            if(wait1.isChecked())
+            RadioButton wait4 = (RadioButton) findViewById(R.id.wait10800);*//*
+            RadioButton wait5 = (RadioButton) findViewById(R.id.wait21600);*/
+            /*if(wait1.isChecked())*/
                 waitTime = "1800";
             /*else if(wait2.isChecked())
                 waitTime = "3600";
@@ -273,8 +275,8 @@ public class UserProfile extends AppCompatActivity {
                 waitTime = "7200";
             else if(wait4.isChecked())
                 waitTime = "10800";*/
-            else if(wait5.isChecked())
-                waitTime = "2147483647";        //21600
+            /*else if(wait5.isChecked())
+                waitTime = "2147483647";*/        //21600
         }
         new MyHTTPPostRequestsSave().execute();
     }

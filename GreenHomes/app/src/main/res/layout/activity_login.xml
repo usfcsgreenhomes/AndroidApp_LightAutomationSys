@@ -116,6 +116,7 @@
             android:textColor="#676762"
             android:typeface="serif"
             android:textAlignment="textStart"
+            android:layout_gravity = "start"
             android:layout_below="@+id/editText2"
             android:layout_alignRight="@+id/imageView11"
             android:layout_alignEnd="@+id/imageView11" />
