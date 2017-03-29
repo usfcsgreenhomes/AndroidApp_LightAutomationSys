@@ -44,7 +44,7 @@ public class UserProfile extends AppCompatActivity {
     TextView emailID;
     TextView rgGroup;
     //RadioGroup rgWait;
-    ImageView waitInt;
+    //ImageView waitInt;
     ProgressDialog progressBar;
     String user;
     String groups;
@@ -67,7 +67,7 @@ public class UserProfile extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true);
         ab.setTitle("welcome!");
         ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF172604")));
-        waitInt = (ImageView)findViewById(R.id.imageView8);
+        //waitInt = (ImageView)findViewById(R.id.imageView8);
         nickName = (EditText)findViewById(R.id.editText3) ;
         phoneNo = (EditText)findViewById(R.id.editText4);
         emailID = (TextView)findViewById(R.id.textView7);
@@ -79,7 +79,7 @@ public class UserProfile extends AppCompatActivity {
         emailID.setText(ProfileData.emailID);
         if(ProfileData.groups.equals("Group1")){
             //rgWait.setVisibility(View.GONE);
-            waitInt.setVisibility(View.GONE);
+            //waitInt.setVisibility(View.GONE);
             rgGroup.setText("Manual Group");
             groups = "Group1";
         }
