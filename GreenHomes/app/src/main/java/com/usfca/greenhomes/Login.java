@@ -87,6 +87,13 @@ public class Login extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressBar != null)
+            progressBar.dismiss();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInf = getMenuInflater();
         menuInf.inflate(R.menu.login_main_activity, menu);

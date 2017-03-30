@@ -88,8 +88,10 @@ public class UserProfile extends AppCompatActivity {
             groups = "Group3";
         }
         if(ProfileData.groups.equals("Group2") || ProfileData.groups.equals("Group3") || ProfileData.groups.equals("Group4")){
-            if(!ProfileData.waitInterval.equals("1800")){
+            if(!ProfileData.waitInterval.equals("1800") || !ProfileData.lightInterval.equals("1800")){
                 waitTime = "1800";
+                lightTime = "1800";
+                progressBar = ProgressDialog.show(this, "", "Saving your profile...", true);
                 new MyHTTPPostRequestsSave().execute();
                 //rgWait.check(R.id.wait1800);
             }
@@ -173,6 +175,13 @@ public class UserProfile extends AppCompatActivity {
 
         //to hide the keyboard appearing automatically
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressBar != null)
+            progressBar.dismiss();
     }
 
     @Override
