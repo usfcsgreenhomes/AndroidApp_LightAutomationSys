@@ -67,6 +67,7 @@ public class YesOrNoIntent extends AppCompatActivity {
                         .edit()
                         .putBoolean(ProfileData.PREF_LOGGEDIN, false)
                         .apply();
+                Login.msCookieManager.getCookieStore().removeAll();
                 Toast.makeText(getApplicationContext(), "You have been logged out successfully!", Toast.LENGTH_LONG).show();
                 startActivity(intent);
                 break;

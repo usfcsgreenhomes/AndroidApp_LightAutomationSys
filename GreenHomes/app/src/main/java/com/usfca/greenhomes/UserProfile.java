@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -200,6 +202,7 @@ public class UserProfile extends AppCompatActivity {
                         .edit()
                         .putBoolean(ProfileData.PREF_LOGGEDIN, false)
                         .apply();
+                Login.msCookieManager.getCookieStore().removeAll();
                 Toast.makeText(getApplicationContext(), "You have been logged out successfully!", Toast.LENGTH_LONG).show();
                 startActivity(intent);
                 break;
@@ -314,6 +317,9 @@ public class UserProfile extends AppCompatActivity {
                 json.put("lightdata", lightTime);
                 json.put("user", user);
                 urlParameters = "Update=" + json.toString();
+                if(Login.msCookieManager.getCookieStore().getCookies().size() > 0){
+                    connection.setRequestProperty("Cookie", TextUtils.join(";", Login.msCookieManager.getCookieStore().getCookies()));
+                }
                 connection.setDoOutput(true);
                 dStream = new DataOutputStream(connection.getOutputStream());
                 dStream.writeBytes(urlParameters); //Writes out the string to the underlying output stream as a sequence of bytes
@@ -328,7 +334,8 @@ public class UserProfile extends AppCompatActivity {
                 return "Error";
             }finally{
                 try {
-                    buf.close();
+                    if (buf != null)
+                        buf.close();
                     if(connection != null)
                         connection.disconnect();
                 } catch (IOException e) {

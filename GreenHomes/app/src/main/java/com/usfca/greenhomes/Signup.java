@@ -318,7 +318,8 @@ public class Signup extends AppCompatActivity {
                 return "Error";
             }finally{
                 try {
-                    buf.close();
+                    if (buf != null)
+                        buf.close();
                     if(connection != null)
                         connection.disconnect();
                 } catch (IOException e) {

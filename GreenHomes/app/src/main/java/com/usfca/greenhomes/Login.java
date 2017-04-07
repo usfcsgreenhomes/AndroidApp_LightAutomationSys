@@ -2,11 +2,9 @@ package com.usfca.greenhomes;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -27,12 +25,18 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.CookieManager;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
     static String remoteIP = "eclipse.umbc.edu";       //eclipse.umbc.edu  //127.0.0.1:8080
+    static final String COOKIES_HEADER = "Set-Cookie";
+    static CookieManager msCookieManager = new CookieManager();
     EditText password;
     EditText emailID;
     CheckBox checkBox;
@@ -124,10 +128,10 @@ public class Login extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Sign up & enjoy our free services now!", Toast.LENGTH_LONG).show();
     }
 
-    public void onForgotPasswordLink(View v){
+    /*public void onForgotPasswordLink(View v){
         intent = new Intent(Login.this, ForgotPasssword.class);
         startActivity(intent);
-    }
+    }*/
 
     public void onPasswordClickListener(View v){
 
@@ -189,6 +193,13 @@ public class Login extends AppCompatActivity {
                 buf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 while((line = buf.readLine()) != null){
                     sbuf.append(line);
+                }
+                Map<String, List<String>> headerFields = connection.getHeaderFields();
+                List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+                if (cookiesHeader != null) {
+                    for (String cookie : cookiesHeader)
+                        msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
                 }
                 return sbuf.toString();
             }catch(Exception e){
