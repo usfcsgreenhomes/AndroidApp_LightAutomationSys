@@ -117,7 +117,7 @@ public class Signup extends AppCompatActivity {
         nickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length() < 6 || s.length() > 10)
+                if(s.length() < 6 || s.length() > 20)
                     nickname.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.warning,0);
                 else
                     nickname.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.checkcircle,0);
@@ -216,7 +216,7 @@ public class Signup extends AppCompatActivity {
             emailID.setSelection(0);
             return;
         }
-        if(name.length() < 6 || name.length() > 10){
+        if(name.length() < 6 || name.length() > 20){
             progressBar.hide();
             nickname.setError("Too short or too long");
             nickname.setSelection(0);

@@ -26,4 +26,5 @@ public class ProfileData {
     static final String PREF_LIGHTINTERVAL = "lightinterval";
     static final String PREF_LOGGEDIN = "loggedin";
     static final String PREF_FILE = "GreenHomes";
+    static final String PREF_COOKIES = "Cookies";
 }

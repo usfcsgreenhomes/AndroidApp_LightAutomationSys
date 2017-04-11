@@ -23,4 +23,10 @@ public class MyInstanceIDListenerService extends InstanceIDListenerService {
         }
         return super.onStartCommand(intent, flags, startId);
     }
+
+    @Override
+    public void onTokenRefresh() {
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+    }
 }

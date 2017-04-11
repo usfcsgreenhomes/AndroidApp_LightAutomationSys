@@ -1,5 +1,6 @@
 package com.usfca.greenhomes;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +33,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.CookieManager;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -91,9 +94,13 @@ public class UserProfile extends AppCompatActivity {
         }
         if(ProfileData.groups.equals("Group2") || ProfileData.groups.equals("Group3") || ProfileData.groups.equals("Group4")){
             if(!ProfileData.waitInterval.equals("1800") || !ProfileData.lightInterval.equals("1800")){
+                progressBar = ProgressDialog.show(this, "", "Saving your profile...", true);
                 waitTime = "1800";
                 lightTime = "1800";
-                progressBar = ProgressDialog.show(this, "", "Saving your profile...", true);
+                user = ProfileData.userID;
+                //lightTime = ProfileData.lightInterval;
+                phone = ProfileData.phone;
+                name = ProfileData.nickname;
                 new MyHTTPPostRequestsSave().execute();
                 //rgWait.check(R.id.wait1800);
             }
@@ -136,7 +143,7 @@ public class UserProfile extends AppCompatActivity {
         nickName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length() < 6 || s.length() > 10)
+                if(s.length() < 6 || s.length() > 20)
                     nickName.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.warning,0);
                 else
                     nickName.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.checkcircle,0);
@@ -151,16 +158,10 @@ public class UserProfile extends AppCompatActivity {
         intent = new Intent(UserProfile.this, MainActivity.class);
         intent2 = new Intent(UserProfile.this, ContactUs.class);
         intent3 = new Intent(UserProfile.this, AboutUs.class);
-        intent4 = new Intent(UserProfile.this, MyServices.class);
+        //intent4 = new Intent(UserProfile.this, MyServices.class);
+        intent4 = new Intent(UserProfile.this, RegistrationIntentService.class);
         if(ProfileData.groups.equals("Group2") || ProfileData.groups.equals("Group4")){            //Start the MyService class only if the user has selected Message Service
-            if(!MyServices.started){
                 startService(intent4);
-            }
-        }
-        else{
-            if(MyServices.started){
-                stopService(intent4);
-            }
         }
 
         /* Popup for Snooze Time */
@@ -261,7 +262,7 @@ public class UserProfile extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "One of the input field(s) seems to be blank. Please try again!", Toast.LENGTH_LONG).show();
             return;
         }
-        if (name.length() < 6 || name.length() > 10) {
+        if (name.length() < 6 || name.length() > 20) {
             progressBar.hide();
             nickName.setError("Too short or too long");
             nickName.setSelection(0);
@@ -281,6 +282,7 @@ public class UserProfile extends AppCompatActivity {
             RadioButton wait5 = (RadioButton) findViewById(R.id.wait21600);*/
             /*if(wait1.isChecked())*/
                 waitTime = "1800";
+                lightTime = "1800";
             /*else if(wait2.isChecked())
                 waitTime = "3600";
             else if(wait3.isChecked())
@@ -295,6 +297,7 @@ public class UserProfile extends AppCompatActivity {
 
     public class MyHTTPPostRequestsSave extends AsyncTask<String, String, String> {
 
+        @SuppressLint("LongLogTag")
         @Override
         protected String doInBackground(String... arg0) {
             BufferedReader buf = null;
@@ -317,8 +320,16 @@ public class UserProfile extends AppCompatActivity {
                 json.put("lightdata", lightTime);
                 json.put("user", user);
                 urlParameters = "Update=" + json.toString();
+                ProfileData.pref = getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE);
                 if(Login.msCookieManager.getCookieStore().getCookies().size() > 0){
                     connection.setRequestProperty("Cookie", TextUtils.join(";", Login.msCookieManager.getCookieStore().getCookies()));
+                } else if (ProfileData.pref.getStringSet(ProfileData.PREF_COOKIES, null) != null){
+                    for (String cookie : ProfileData.pref.getStringSet(ProfileData.PREF_COOKIES, null))
+                        Login.msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    connection.setRequestProperty("Cookie", TextUtils.join(";", Login.msCookieManager.getCookieStore().getCookies()));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Session Expired.. Please Login!", Toast.LENGTH_LONG).show();
+                    startActivity(intent);
                 }
                 connection.setDoOutput(true);
                 dStream = new DataOutputStream(connection.getOutputStream());

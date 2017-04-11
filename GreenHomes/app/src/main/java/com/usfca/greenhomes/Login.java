@@ -2,12 +2,14 @@ package com.usfca.greenhomes;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,8 +31,10 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Login extends AppCompatActivity {
 
@@ -196,10 +200,17 @@ public class Login extends AppCompatActivity {
                 }
                 Map<String, List<String>> headerFields = connection.getHeaderFields();
                 List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+                Set<String> cookiesSet = new HashSet<>(cookiesHeader);
+                getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE)
+                        .edit()
+                        .putStringSet(ProfileData.PREF_COOKIES, cookiesSet)
+                        .apply();
+                Log.d("Saved Cookies ", String.valueOf(getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE).getStringSet(ProfileData.PREF_COOKIES, null)));
 
                 if (cookiesHeader != null) {
-                    for (String cookie : cookiesHeader)
+                    for (String cookie : cookiesHeader) {
                         msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                    }
                 }
                 return sbuf.toString();
             }catch(Exception e){
@@ -239,6 +250,7 @@ public class Login extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 progressBar.hide();
+                Log.d("Cookies", String.valueOf(Login.msCookieManager.getCookieStore().getCookies()));
                 getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE)
                         .edit()
                         .putString(ProfileData.PREF_EMAILID, ProfileData.emailID)
