@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -23,7 +22,6 @@ public class NoIntent extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        //Toast.makeText(context, " Rejected the Recommendation", Toast.LENGTH_LONG).show();
         new MyHTTPGetRequestNo().execute();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
@@ -64,7 +62,6 @@ public class NoIntent extends BroadcastReceiver {
         @Override
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
-            Log.d("Response after request", response);
             if (response.equals("success :)")) {
                 Toast.makeText(context, "Request for No Successful!!! ", Toast.LENGTH_LONG).show();
             } else if(response.equals("error :(")) {

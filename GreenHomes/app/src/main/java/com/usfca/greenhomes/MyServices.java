@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -39,7 +38,6 @@ public class MyServices extends Service {
     class ServiceThread implements Runnable{
         ServiceThread(int serviceID){
             service = serviceID;
-            Log.d("Service Id ", String.valueOf(serviceID));
         }
         public void run(){
             try {
@@ -109,13 +107,11 @@ public class MyServices extends Service {
                 ProfileData.pref = getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE);
                 if(Login.msCookieManager.getCookieStore().getCookies().size() > 0){
                     connection.setRequestProperty("Cookie", TextUtils.join(";", Login.msCookieManager.getCookieStore().getCookies()));
-                    Log.d("in myservice If Cookies", String.valueOf(Login.msCookieManager.getCookieStore().getCookies()));
                 } else if (ProfileData.pref.getStringSet(ProfileData.PREF_COOKIES, null) != null){
                     Login.msCookieManager.getCookieStore().removeAll();
                     for (String cookie : ProfileData.pref.getStringSet(ProfileData.PREF_COOKIES, null))
                         Login.msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
                     connection.setRequestProperty("Cookie", TextUtils.join(";", Login.msCookieManager.getCookieStore().getCookies()));
-                    Log.d("In else if P Cookies", String.valueOf(Login.msCookieManager.getCookieStore().getCookies()));
                 } else {
                     Toast.makeText(getApplicationContext(), "Session Expired.. Please Login!", Toast.LENGTH_LONG).show();
                 }
@@ -124,10 +120,7 @@ public class MyServices extends Service {
                 dStream.writeBytes(urlParameters); //Writes out the string to the underlying output stream as a sequence of bytes
                 dStream.flush(); // Flushes the data output stream.
                 dStream.close(); // Closing the output stream.
-                Log.d("Before BufferReader", "Buff");
-                Log.d("123", "123");
                 buf = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                Log.d("After BufferReader", "Buff2");
                 while((line = buf.readLine()) != null){
                     sbuf.append(line);
                 }

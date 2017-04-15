@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.NotificationCompat;
@@ -26,9 +27,7 @@ public class MyGcmListenerService extends GcmListenerService {
         String contentTitle = data.getString("gcm.notification.title");
         String contentText = data.getString("gcm.notification.body");
         Intent yesIn = new Intent("yes_intent");
-        //yesIn.putExtra("id", notiId);
         Intent noIn = new Intent("no_intent");
-        //noIn.putExtra("id", notiId);
         Intent yesOrNoIn = new Intent(this, YesOrNoIntent.class);
         yesOrNoIn.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent yesOrNoPin = PendingIntent.getActivity(getApplicationContext(), 0, yesOrNoIn, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -37,14 +36,16 @@ public class MyGcmListenerService extends GcmListenerService {
         PendingIntent noIntent = PendingIntent.getBroadcast(this, 0, noIn, PendingIntent.FLAG_UPDATE_CURRENT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder noti = (NotificationCompat.Builder) new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.logo)
                 .setContentTitle(new Date().toString())
                 .setContentText(contentText)
                 .setGroup("GreenHomes")
                 .setGroupSummary(true)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri);
-                //.setContentIntent(yesOrNoPin);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            noti.setSmallIcon(R.drawable.ic_stat_logo);
+        } else
+            noti.setSmallIcon(R.drawable.logo);
         try{
             if (ProfileData.pref.getString(ProfileData.PREF_GROUPS, null).equals("Group2")){
                 noti.setContentIntent(yesOrNoPin);
@@ -55,7 +56,6 @@ public class MyGcmListenerService extends GcmListenerService {
         } catch (Exception exp){
             exp.printStackTrace();
         }
-        //NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0, noti.build());
     }

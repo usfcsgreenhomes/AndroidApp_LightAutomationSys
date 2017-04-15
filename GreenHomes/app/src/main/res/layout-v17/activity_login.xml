@@ -21,10 +21,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView11"
             android:src="@drawable/logo"
-            android:layout_alignLeft="@+id/textView8"
-            android:layout_alignStart="@+id/textView8"
-            android:layout_alignRight="@+id/textView8"
-            android:layout_alignEnd="@+id/textView8" />
+            android:layout_marginBottom="54dp"
+            android:layout_above="@+id/editText2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <EditText
             android:layout_width="fill_parent"
@@ -117,9 +119,10 @@
             android:textColor="#676762"
             android:typeface="serif"
             android:textAlignment="textStart"
+            android:layout_gravity = "start"
+            android:layout_marginTop="9dp"
             android:layout_below="@+id/editText2"
-            android:layout_alignRight="@+id/imageView11"
-            android:layout_alignEnd="@+id/imageView11" />
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 </ScrollView>

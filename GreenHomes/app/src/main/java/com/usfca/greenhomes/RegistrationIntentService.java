@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -70,12 +69,11 @@ public class RegistrationIntentService extends IntentService {
             InstanceID instanceID = InstanceID.getInstance(getApplicationContext());
             String token = instanceID.getToken("918094878188", GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             regToken = token;
-            Log.d("RegIntentService", "GCM Registration Token: " + token);
-            sendRegistrationToServer();
+            if (regToken != null)
+                sendRegistrationToServer();
 
         } catch (Exception e){
-            Log.d("RegIntentService", "Failed to complete token refresh", e);
-
+            e.printStackTrace();
         }
 
     }

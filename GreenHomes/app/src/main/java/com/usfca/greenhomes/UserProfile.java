@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +19,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -48,8 +43,6 @@ public class UserProfile extends AppCompatActivity {
     EditText phoneNo;
     TextView emailID;
     TextView rgGroup;
-    //RadioGroup rgWait;
-    //ImageView waitInt;
     ProgressDialog progressBar;
     String user;
     String groups;
@@ -72,19 +65,14 @@ public class UserProfile extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true);
         ab.setTitle("welcome!");
         ab.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF172604")));
-        //waitInt = (ImageView)findViewById(R.id.imageView8);
         nickName = (EditText)findViewById(R.id.editText3) ;
         phoneNo = (EditText)findViewById(R.id.editText4);
         emailID = (TextView)findViewById(R.id.textView7);
         rgGroup = (TextView)findViewById(R.id.textView11);
-        /*rgWait = (RadioGroup)findViewById(R.id.radioGroup3);
-        rgWait.check(R.id.wait1800);*/
         nickName.setText(ProfileData.nickname);
         phoneNo.setText(ProfileData.phone);
         emailID.setText(ProfileData.emailID);
         if(ProfileData.groups.equals("Group1")){
-            //rgWait.setVisibility(View.GONE);
-            //waitInt.setVisibility(View.GONE);
             rgGroup.setText("Manual Group");
             groups = "Group1";
         }
@@ -98,24 +86,10 @@ public class UserProfile extends AppCompatActivity {
                 waitTime = "1800";
                 lightTime = "1800";
                 user = ProfileData.userID;
-                //lightTime = ProfileData.lightInterval;
                 phone = ProfileData.phone;
                 name = ProfileData.nickname;
                 new MyHTTPPostRequestsSave().execute();
-                //rgWait.check(R.id.wait1800);
             }
-            /*else if(ProfileData.waitInterval.equals("3600")){
-                rgWait.check(R.id.wait3600);
-            }
-            else if(ProfileData.waitInterval.equals("7200")){
-                rgWait.check(R.id.wait7200);
-            }
-            else if(ProfileData.waitInterval.equals("10800")){
-                rgWait.check(R.id.wait10800);
-            }*//*
-            else{
-                rgWait.check(R.id.wait21600);
-            }*/
         }
         if(ProfileData.groups.equals("Group2")){
             rgGroup.setText("Automatic + Recommendation Group");
@@ -158,7 +132,6 @@ public class UserProfile extends AppCompatActivity {
         intent = new Intent(UserProfile.this, MainActivity.class);
         intent2 = new Intent(UserProfile.this, ContactUs.class);
         intent3 = new Intent(UserProfile.this, AboutUs.class);
-        //intent4 = new Intent(UserProfile.this, MyServices.class);
         intent4 = new Intent(UserProfile.this, RegistrationIntentService.class);
         if(ProfileData.groups.equals("Group2") || ProfileData.groups.equals("Group4")){            //Start the MyService class only if the user has selected Message Service
                 startService(intent4);
@@ -229,16 +202,7 @@ public class UserProfile extends AppCompatActivity {
             snoozeGroup = false;
         }
     }
-    /*public void onSnoozeClickListener(View v){
-        if(!snoozePopup){
-            popupWindowSnooze.showAsDropDown(v, 50, -30);
-            snoozePopup = true;
-        }
-        else {
-            popupWindowSnooze.dismiss();
-            snoozePopup = false;
-        }
-    }*/
+
 
     public void onGroupClickListener(View v){
         if(!snoozeGroup){
@@ -275,22 +239,10 @@ public class UserProfile extends AppCompatActivity {
             return;
         }
         if(groups.equals("Group2") || groups.equals("Group3") || groups.equals("Group4")){
-            /*RadioButton wait1 = (RadioButton) findViewById(R.id.wait1800);
-            *//*RadioButton wait2 = (RadioButton) findViewById(R.id.wait3600);
-            RadioButton wait3 = (RadioButton) findViewById(R.id.wait7200);
-            RadioButton wait4 = (RadioButton) findViewById(R.id.wait10800);*//*
-            RadioButton wait5 = (RadioButton) findViewById(R.id.wait21600);*/
-            /*if(wait1.isChecked())*/
+
                 waitTime = "1800";
                 lightTime = "1800";
-            /*else if(wait2.isChecked())
-                waitTime = "3600";
-            else if(wait3.isChecked())
-                waitTime = "7200";
-            else if(wait4.isChecked())
-                waitTime = "10800";*/
-            /*else if(wait5.isChecked())
-                waitTime = "2147483647";*/        //21600
+
         }
         new MyHTTPPostRequestsSave().execute();
     }

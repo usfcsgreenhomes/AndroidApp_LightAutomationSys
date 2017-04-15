@@ -6,17 +6,20 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import io.fabric.sdk.android.Fabric;
 
 public class YesOrNoIntent extends AppCompatActivity {
     static String remoteIP = "eclipse.umbc.edu";
@@ -44,6 +47,7 @@ public class YesOrNoIntent extends AppCompatActivity {
         intent = new Intent(YesOrNoIntent.this, MainActivity.class);
         intent2 = new Intent(YesOrNoIntent.this, ContactUs.class);
         intent3 = new Intent(YesOrNoIntent.this, AboutUs.class);
+        Fabric.with(this, new Crashlytics());
         ProfileData.pref = getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE);
         if(!ProfileData.pref.getBoolean(ProfileData.PREF_LOGGEDIN, false)){
             yesornointent = true;
@@ -129,7 +133,6 @@ public class YesOrNoIntent extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String response) {
-            Log.d("Response after request", response);
             if (response.equals("success :)")) {
                 Toast.makeText(getApplicationContext(), "Request for Yes Successful!!! ", Toast.LENGTH_LONG).show();
             } else if (response.equals("error :(")){

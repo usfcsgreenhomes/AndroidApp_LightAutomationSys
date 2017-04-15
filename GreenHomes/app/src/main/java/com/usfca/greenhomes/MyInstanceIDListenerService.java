@@ -17,9 +17,8 @@ public class MyInstanceIDListenerService extends InstanceIDListenerService {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            Log.i("Token: ", token);
         }catch(IOException e){
-            Log.i("Exception: ", e.toString());
+            e.printStackTrace();
         }
         return super.onStartCommand(intent, flags, startId);
     }

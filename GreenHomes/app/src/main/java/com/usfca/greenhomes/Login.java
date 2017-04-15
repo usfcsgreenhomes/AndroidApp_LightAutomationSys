@@ -2,14 +2,12 @@ package com.usfca.greenhomes;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,10 +17,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -205,7 +201,6 @@ public class Login extends AppCompatActivity {
                         .edit()
                         .putStringSet(ProfileData.PREF_COOKIES, cookiesSet)
                         .apply();
-                Log.d("Saved Cookies ", String.valueOf(getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE).getStringSet(ProfileData.PREF_COOKIES, null)));
 
                 if (cookiesHeader != null) {
                     for (String cookie : cookiesHeader) {
@@ -250,7 +245,6 @@ public class Login extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 progressBar.hide();
-                Log.d("Cookies", String.valueOf(Login.msCookieManager.getCookieStore().getCookies()));
                 getSharedPreferences(ProfileData.PREF_FILE, MODE_PRIVATE)
                         .edit()
                         .putString(ProfileData.PREF_EMAILID, ProfileData.emailID)
